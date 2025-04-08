@@ -41,6 +41,6 @@ npx projen destroy
 
 ![Application Diagram](./src/assets/app-diagram.svg)
 
-## OpenTelemetry Diagram
+## Observability Diagram
 
-![OpenTelemetry Diagram](./src/assets/otel-diagram.svg)
+![Observability Diagram](./src/assets/o11y-diagram.svg)

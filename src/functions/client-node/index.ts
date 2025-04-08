@@ -3,8 +3,8 @@ import {
   createTracedHandler,
   defaultExtractor,
   TriggerType,
+  type LambdaContext,
 } from "@dev7a/lambda-otel-lite";
-import type { LambdaContext } from "@dev7a/lambda-otel-lite";
 import { APIGatewayProxyStructuredResultV2, ScheduledEvent } from "aws-lambda";
 import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";

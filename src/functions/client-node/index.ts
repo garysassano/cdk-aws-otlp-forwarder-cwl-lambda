@@ -110,60 +110,11 @@ export function scheduledEventExtractor(
   const base = defaultExtractor(event, context);
   const attributes = { ...base.attributes };
 
-  // Type cast to ScheduledEvent
-  const scheduledEvent = event as ScheduledEvent;
-
-  // Extract basic event attributes
-  if (scheduledEvent["detail-type"]) {
-    attributes["event.name"] = scheduledEvent["detail-type"];
-  }
-
-  if (scheduledEvent.source) {
-    attributes["event.source"] = scheduledEvent.source;
-  }
-
-  if (scheduledEvent.id) {
-    attributes["event.id"] = scheduledEvent.id;
-  }
-
-  if (scheduledEvent.region) {
-    attributes["cloud.region"] = scheduledEvent.region;
-  }
-
-  if (scheduledEvent.account) {
-    attributes["cloud.account.id"] = scheduledEvent.account;
-  }
-
-  if (scheduledEvent.time) {
-    attributes["schedule.time"] = scheduledEvent.time;
-  }
-
-  // Try to extract rule name from resources
-  if (
-    Array.isArray(scheduledEvent.resources) &&
-    scheduledEvent.resources.length > 0
-  ) {
-    // EventBridge rule ARNs follow the pattern:
-    // arn:aws:events:region:account:rule/rule-name
-    for (const resource of scheduledEvent.resources) {
-      if (resource.includes("rule/")) {
-        const ruleName = resource.split("rule/").pop();
-        if (ruleName) {
-          attributes["schedule.rule"] = ruleName;
-          break;
-        }
-      }
-    }
-  }
-
-  // Create a descriptive span name
-  const spanName = `scheduled-${attributes["event.name"] || "event"}`;
-
   return {
     kind: SpanKind.SERVER,
     attributes,
     trigger: TriggerType.Timer,
-    spanName,
+    spanName: "generate-quotes",
   };
 }
 

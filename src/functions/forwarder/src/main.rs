@@ -18,12 +18,13 @@ use aws_credential_types::provider::ProvideCredentials;
 use aws_lambda_events::event::cloudwatch_logs::LogEntry;
 use otlp_sigv4_client::SigV4ClientBuilder;
 use otlp_stdout_span_exporter::ExporterOutput;
-use serverless_otlp_forwarder::{
+use otlp_stdout_logs_processor::{
+    app_state::AppState,
     collectors::Collectors,
     processing::process_telemetry_batch,
     span_compactor::{compact_telemetry_payloads, SpanCompactionConfig},
     telemetry::TelemetryData,
-    AppState, LogsEventWrapper,
+    wrappers::LogsEventWrapper,
 };
 
 use lambda_otel_lite::{init_telemetry, OtelTracingLayer, TelemetryConfig};

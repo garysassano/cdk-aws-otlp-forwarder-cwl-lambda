@@ -107,12 +107,11 @@ export function scheduledEventExtractor(
   context: LambdaContext,
 ) {
   // Start with default attributes
-  const base = defaultExtractor(event, context);
-  const attributes = { ...base.attributes };
+  const baseAttributes = defaultExtractor(event, context);
 
   return {
     kind: SpanKind.SERVER,
-    attributes,
+    ...baseAttributes,
     trigger: TriggerType.Timer,
     spanName: "generate-quotes",
   };

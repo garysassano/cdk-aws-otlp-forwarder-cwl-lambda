@@ -10,6 +10,7 @@ import { SpanStatusCode, trace, SpanKind } from "@opentelemetry/api";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { AwsInstrumentation } from "@opentelemetry/instrumentation-aws-sdk";
+import { UndiciInstrumentation } from "@opentelemetry/instrumentation-undici";
 import { z } from "zod";
 import { validateEnv } from "../../utils/validate-env";
 
@@ -25,7 +26,11 @@ const { tracer, completionHandler } = initTelemetry();
 // Register instrumentations
 registerInstrumentations({
   tracerProvider: trace.getTracerProvider(),
-  instrumentations: [new AwsInstrumentation(), new HttpInstrumentation()],
+  instrumentations: [
+    new AwsInstrumentation(),
+    new HttpInstrumentation(),
+    new UndiciInstrumentation(),
+  ],
 });
 
 // Define API endpoints

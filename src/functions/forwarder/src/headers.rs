@@ -34,7 +34,9 @@ impl LogRecordHeaders {
     /// Adds headers from the log record itself.
     /// This includes both custom headers and content-type/encoding headers.
     pub fn with_log_record(mut self, log_record: &ExporterOutput) -> Result<Self> {
-        self.extract_headers(&log_record.headers)?;
+        if let Some(headers) = &log_record.headers {
+            self.extract_headers(headers)?;
+        }
         self.add_content_headers(log_record)?;
         Ok(self)
     }
@@ -134,11 +136,11 @@ impl LogRecordHeaders {
     fn add_content_headers(&mut self, log_record: &ExporterOutput) -> Result<()> {
         self.0.insert(
             HeaderName::from_static(CONTENT_TYPE_HEADER),
-            HeaderValue::from_str(log_record.content_type)?,
+            HeaderValue::from_str(&log_record.content_type)?,
         );
         self.0.insert(
             HeaderName::from_static(CONTENT_ENCODING_HEADER),
-            HeaderValue::from_str(log_record.content_encoding)?,
+            HeaderValue::from_str(&log_record.content_encoding)?,
         );
         Ok(())
     }
@@ -156,21 +158,22 @@ mod tests {
     use aws_credential_types::Credentials;
     use std::collections::HashMap;
 
-    fn create_test_log_record() -> ExporterOutput<'static> {
+    fn create_test_log_record() -> ExporterOutput {
         let mut headers = HashMap::new();
         headers.insert("x-custom-header".to_string(), "custom-value".to_string());
         headers.insert("x-another-header".to_string(), "another-value".to_string());
 
         ExporterOutput {
-            version: "test",
+            version: "test".to_string(),
             source: "test-source".to_string(),
-            endpoint: "http://example.com",
-            method: "POST",
-            content_type: "application/json",
-            content_encoding: "gzip",
-            headers,
+            endpoint: "http://example.com".to_string(),
+            method: "POST".to_string(),
+            content_type: "application/json".to_string(),
+            content_encoding: "gzip".to_string(),
+            headers: Some(headers),
             payload: "test-payload".to_string(),
             base64: true,
+            level: Some("info".to_string()),
         }
     }
 
@@ -236,6 +239,7 @@ mod tests {
             endpoint: "http://example.com".to_string(),
             auth: Some("x-api-key=test-key".to_string()),
             exclude: None,
+            disabled: false,
         };
 
         let headers = LogRecordHeaders::default()
@@ -258,6 +262,7 @@ mod tests {
             endpoint: "http://example.com".to_string(),
             auth: Some("sigv4".to_string()),
             exclude: None,
+            disabled: false,
         };
 
         let telemetry = create_test_telemetry();
@@ -296,15 +301,16 @@ mod tests {
         headers.insert("invalid header name".to_string(), "value".to_string());
 
         let log_record = ExporterOutput {
-            version: "test",
+            version: "test".to_string(),
             source: "test-source".to_string(),
-            endpoint: "http://example.com",
-            method: "POST",
-            content_type: "application/json",
-            content_encoding: "gzip",
-            headers,
+            endpoint: "http://example.com".to_string(),
+            method: "POST".to_string(),
+            content_type: "application/json".to_string(),
+            content_encoding: "gzip".to_string(),
+            headers: Some(headers),
             payload: "test-payload".to_string(),
             base64: true,
+            level: Some("info".to_string()),
         };
 
         let result = LogRecordHeaders::default().with_log_record(&log_record);
@@ -319,15 +325,16 @@ mod tests {
         headers.insert("x-test".to_string(), "invalid\u{0000}value".to_string());
 
         let log_record = ExporterOutput {
-            version: "test",
+            version: "test".to_string(),
             source: "test-source".to_string(),
-            endpoint: "http://example.com",
-            method: "POST",
-            content_type: "application/json",
-            content_encoding: "gzip",
-            headers,
+            endpoint: "http://example.com".to_string(),
+            method: "POST".to_string(),
+            content_type: "application/json".to_string(),
+            content_encoding: "gzip".to_string(),
+            headers: Some(headers),
             payload: "test-payload".to_string(),
             base64: true,
+            level: Some("info".to_string()),
         };
 
         let result = LogRecordHeaders::default().with_log_record(&log_record);
@@ -343,6 +350,7 @@ mod tests {
             endpoint: "http://example.com".to_string(),
             auth: Some("unknown".to_string()),
             exclude: None,
+            disabled: false,
         };
 
         let result = LogRecordHeaders::default().with_collector_auth(
@@ -364,6 +372,7 @@ mod tests {
             endpoint: "http://example.com".to_string(),
             auth: Some("invalid-format".to_string()),
             exclude: None,
+            disabled: false,
         };
 
         let result = LogRecordHeaders::default().with_collector_auth(

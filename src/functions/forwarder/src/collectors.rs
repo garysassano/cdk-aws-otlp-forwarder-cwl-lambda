@@ -522,7 +522,9 @@ mod tests {
 
     #[test]
     fn test_collector_cache_ttl() {
-        std::env::set_var("COLLECTORS_CACHE_TTL_SECONDS", "2");
+        unsafe {
+            std::env::set_var("COLLECTORS_CACHE_TTL_SECONDS", "2");
+        }
 
         let collectors = Collectors::new(vec![Collector {
             name: "test".to_string(),
@@ -605,7 +607,9 @@ mod tests {
     async fn test_cache_refresh() {
         // We'll simulate cache refresh by directly manipulating the cache
         // Set a short TTL for testing
-        std::env::set_var("COLLECTORS_CACHE_TTL_SECONDS", "1");
+        unsafe {
+            std::env::set_var("COLLECTORS_CACHE_TTL_SECONDS", "1");
+        }
 
         // Create collectors for our test
         let collector1 = Collector {

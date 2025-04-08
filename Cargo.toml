@@ -36,7 +36,7 @@ lambda-otel-lite = "0.11.4"
 otlp-sigv4-client = "0.10.0"
 otlp-stdout-client = "0.4.1"
 otlp-stdout-logs-processor = { path = "src/functions/forwarder/otlp-stdout-logs-processor" }
-otlp-stdout-span-exporter = "0.11.1"
+otlp-stdout-span-exporter = "0.13.0"
 
 # OpenTelemetry
 opentelemetry = { version = "0.28.0", features = ["trace"] }

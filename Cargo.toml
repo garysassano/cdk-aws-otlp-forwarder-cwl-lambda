@@ -4,6 +4,7 @@ members = [
     "src/functions/forwarder",
     "src/functions/service"
 ]
+resolver = "3"
 
 [workspace.package]
 version = "1.0.0"

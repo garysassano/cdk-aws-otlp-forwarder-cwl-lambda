@@ -79,19 +79,11 @@
       "type": "build"
     },
     {
-      "name": "@aws-sdk/client-sqs",
-      "type": "runtime"
-    },
-    {
       "name": "@dev7a/lambda-otel-lite",
       "type": "runtime"
     },
     {
       "name": "@dev7a/otlp-stdout-exporter",
-      "type": "runtime"
-    },
-    {
-      "name": "@middy/core",
       "type": "runtime"
     },
     {

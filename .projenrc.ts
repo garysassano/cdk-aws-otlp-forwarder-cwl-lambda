@@ -14,10 +14,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   projenrcTs: true,
 
   deps: [
-    "@aws-sdk/client-sqs",
     "@dev7a/lambda-otel-lite",
     "@dev7a/otlp-stdout-exporter",
-    "@middy/core",
     "@opentelemetry/api",
     "@opentelemetry/core",
     "@opentelemetry/instrumentation",

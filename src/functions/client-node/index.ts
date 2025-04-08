@@ -16,7 +16,9 @@ import { validateEnv } from "../../utils/validate-env";
 // LAMBDA INITIALIZATION (COLD START)
 //==============================================================================
 
-// Initialize OpenTelemetry tracer and provider
+// Initialize telemetry with default configuration
+// The service name will be automatically set from OTEL_SERVICE_NAME
+// or AWS_LAMBDA_FUNCTION_NAME environment variables
 const { tracer, completionHandler } = initTelemetry();
 
 // Register instrumentations

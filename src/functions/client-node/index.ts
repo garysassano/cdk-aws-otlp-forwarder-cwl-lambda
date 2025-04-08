@@ -90,9 +90,7 @@ async function lambdaHandler(
   }
 }
 
-/**
- * Extract attributes for EventBridge Scheduler events.
- */
+// Extract attributes for EventBridge Scheduler events.
 export function scheduledEventExtractor(
   event: unknown,
   context: LambdaContext,

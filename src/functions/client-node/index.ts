@@ -1,7 +1,14 @@
 import { initTelemetry, createTracedHandler } from "@dev7a/lambda-otel-lite";
 import type { LambdaContext } from "@dev7a/lambda-otel-lite";
+import {
+  defaultExtractor,
+  TriggerType,
+} from "@dev7a/lambda-otel-lite/dist/internal/telemetry/extractors";
 import { APIGatewayProxyStructuredResultV2, ScheduledEvent } from "aws-lambda";
 import { SpanStatusCode, trace } from "@opentelemetry/api";
+import { registerInstrumentations } from "@opentelemetry/instrumentation";
+import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
+import { AwsInstrumentation } from "@opentelemetry/instrumentation-aws-sdk";
 import { z } from "zod";
 import { validateEnv } from "../../utils/validate-env";
 
@@ -11,6 +18,12 @@ import { validateEnv } from "../../utils/validate-env";
 
 // Initialize OpenTelemetry tracer and provider
 const { tracer, completionHandler } = initTelemetry();
+
+// Register instrumentations
+registerInstrumentations({
+  tracerProvider: trace.getTracerProvider(),
+  instrumentations: [new AwsInstrumentation(), new HttpInstrumentation()],
+});
 
 // Define API endpoints
 const QUOTES_URL = "https://dummyjson.com/quotes/random";
@@ -74,10 +87,14 @@ const traced = createTracedHandler(
   "quotes-function",
   completionHandler,
   (event: unknown, context: LambdaContext) => {
+    const baseAttributes = defaultExtractor(event, context);
     return {
+      ...baseAttributes,
+      trigger: TriggerType.Timer,
       spanName: "process-quote",
       attributes: {
-        "faas.trigger": "timer",
+        ...baseAttributes.attributes,
+        "schedule.period": "5m",
       },
     };
   },

@@ -35,6 +35,7 @@ lambda-lw-http-router = "0.3.0"
 lambda-otel-lite = "0.11.4"
 otlp-sigv4-client = "0.10.0"
 otlp-stdout-client = "0.4.1"
+otlp-stdout-logs-processor = { path = "forwarders/otlp-stdout-logs-processor/processor" }
 otlp-stdout-span-exporter = "0.11.1"
 
 # OpenTelemetry

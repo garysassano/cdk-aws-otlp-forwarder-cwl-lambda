@@ -20,6 +20,7 @@ opentelemetry-otlp.workspace = true
 opentelemetry-proto.workspace = true
 opentelemetry_sdk.workspace = true
 otlp-sigv4-client.workspace = true
+otlp-stdout-logs-processor.workspace = true
 otlp-stdout-span-exporter.workspace = true
 prost.workspace = true
 regex.workspace = true

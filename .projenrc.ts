@@ -1,15 +1,15 @@
 import { awscdk, javascript } from "projen";
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: "2.175.1",
+  cdkVersion: "2.188.0",
   defaultReleaseBranch: "main",
   depsUpgradeOptions: { workflow: false },
   eslint: true,
   gitignore: ["**/target"],
-  minNodeVersion: "22.12.0",
+  minNodeVersion: "22.14.0",
   name: "cdk-aws-lambda-otel-code-instrumentation",
   packageManager: javascript.NodePackageManager.PNPM,
-  pnpmVersion: "9",
+  pnpmVersion: "10",
   prettier: true,
   projenrcTs: true,
 

@@ -28,7 +28,7 @@
     "@types/node": "^22",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
-    "aws-cdk": "^2.175.1",
+    "aws-cdk": "^2.188.0",
     "esbuild": "^0.24.2",
     "eslint": "^9",
     "eslint-config-prettier": "^9.1.0",
@@ -46,8 +46,8 @@
   "dependencies": {
     "@aws-cdk/aws-scheduler-alpha": "^2.174.1-alpha.0",
     "@aws-cdk/aws-scheduler-targets-alpha": "^2.174.1-alpha.0",
-    "@dev7a/lambda-otel-lite": "^0.1.0",
-    "@dev7a/otlp-stdout-exporter": "^0.3.0",
+    "@dev7a/lambda-otel-lite": "^0.11.3",
+    "@dev7a/otlp-stdout-exporter": "^0.3.1",
     "@middy/core": "^6.0.0",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/core": "^1.30.0",
@@ -60,15 +60,15 @@
     "@opentelemetry/sdk-trace-node": "^1.30.0",
     "@opentelemetry/semantic-conventions": "^1.28.0",
     "@types/aws-lambda": "^8.10.147",
-    "aws-cdk-lib": "^2.175.1",
-    "cargo-lambda-cdk": "^0.0.31",
+    "aws-cdk-lib": "^2.188.0",
+    "cargo-lambda-cdk": "^0.0.33",
     "constructs": "^10.0.5",
     "uv-python-lambda": "^0.0.6",
     "zod": "^3.24.1"
   },
   "pnpm": {},
   "engines": {
-    "node": ">= 22.12.0"
+    "node": ">= 22.14.0"
   },
   "license": "Apache-2.0",
   "publishConfig": {

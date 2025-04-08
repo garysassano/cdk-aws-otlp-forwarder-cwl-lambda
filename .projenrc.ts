@@ -31,6 +31,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     "@opentelemetry/instrumentation",
     "@opentelemetry/sdk-trace-node",
     "@opentelemetry/semantic-conventions",
+    "@aws-sdk/client-sqs",
     "@types/aws-lambda",
     "cargo-lambda-cdk",
     "uv-python-lambda",

@@ -11,8 +11,7 @@ import { trace, SpanStatusCode, Span } from "@opentelemetry/api";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { AwsInstrumentation } from "@opentelemetry/instrumentation-aws-sdk";
-import axios from "axios";
-import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import type { SendMessageCommandInput } from "@aws-sdk/client-sqs";
 import { ScheduledEvent } from "aws-lambda";
 
 // Initialize telemetry with default configuration
@@ -26,7 +25,9 @@ registerInstrumentations({
   instrumentations: [new AwsInstrumentation(), new HttpInstrumentation()],
 });
 
-const sqs = new SQSClient();
+// Create SQS client
+const sqs = new (require("@aws-sdk/client-sqs").SQSClient)();
+const { SendMessageCommand } = require("@aws-sdk/client-sqs");
 
 const QUOTES_URL = "https://dummyjson.com/quotes/random";
 const QUEUE_URL = process.env.QUOTES_QUEUE_URL;
@@ -42,8 +43,14 @@ interface Quote {
 async function getRandomQuote(): Promise<Quote> {
   return tracer.startActiveSpan("getRandomQuote", async (span: Span) => {
     try {
-      const response = await axios.get(QUOTES_URL);
-      return response.data;
+      const response = await fetch(QUOTES_URL);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data as Quote;
     } catch (error) {
       span.recordException(error as Error);
       span.setStatus({ code: SpanStatusCode.ERROR });
@@ -58,7 +65,7 @@ async function getRandomQuote(): Promise<Quote> {
 async function sendQuote(quote: Quote): Promise<void> {
   return tracer.startActiveSpan("sendQuote", async (span: Span) => {
     try {
-      const command = new SendMessageCommand({
+      const messageParams: SendMessageCommandInput = {
         QueueUrl: QUEUE_URL,
         MessageBody: JSON.stringify(quote),
         MessageAttributes: {
@@ -71,7 +78,8 @@ async function sendQuote(quote: Quote): Promise<void> {
             StringValue: quote.author,
           },
         },
-      });
+      };
+      const command = new SendMessageCommand(messageParams);
       await sqs.send(command);
     } catch (error) {
       span.recordException(error as Error);

@@ -18,7 +18,7 @@ aws-sdk-dynamodb = "1.43.0"
 aws-sdk-kinesis = { version = "1", default-features = false, features = ["rt-tokio"] }
 aws-sdk-secretsmanager = { version = "1.66.0", features = ["behavior-version-latest"] }
 aws-smithy-runtime-api = { version = "1.7.4", features = ["http-1x"] }
-aws_lambda_events = { version = "0.16.0", default-features = false, features = ["apigw", "alb", "sqs"] }
+aws_lambda_events = { version = "0.16.0", default-features = false, features = ["alb", "apigw", "cloudwatch_logs", "kinesis", "sqs"] }
 lambda-extension = { version = "0.11.0" }
 lambda_runtime = { version = "0.13.0", features = ["anyhow", "tracing", "opentelemetry"] }
 serde_dynamo = { version = "4.2.14", features = ["aws-sdk-dynamodb+1"] }

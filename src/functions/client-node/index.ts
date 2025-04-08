@@ -91,22 +91,12 @@ async function lambdaHandler(
 }
 
 /**
- * Extract attributes from EventBridge/CloudWatch Events scheduled events.
- *
- * Extracts standard attributes following OpenTelemetry semantic conventions:
- * - event.name: The event detail type
- * - event.source: The source of the event
- * - event.id: The unique identifier for the event
- * - cloud.region: The AWS region where the event originated
- * - cloud.account.id: The AWS account ID where the event originated
- * - schedule.time: The time when the event was triggered
- * - schedule.rule: The cron expression (if available in resources)
+ * Extract attributes for EventBridge Scheduler events.
  */
 export function scheduledEventExtractor(
   event: unknown,
   context: LambdaContext,
 ) {
-  // Start with default attributes
   const baseAttributes = defaultExtractor(event, context);
 
   return {

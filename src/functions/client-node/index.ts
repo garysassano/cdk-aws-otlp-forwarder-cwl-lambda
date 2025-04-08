@@ -89,7 +89,7 @@ async function lambdaHandler(
 const traced = createTracedHandler(
   "quotes-function",
   completionHandler,
-  (event: unknown, context: LambdaContext) => {
+  (event, context) => {
     const baseAttributes = defaultExtractor(event, context);
     return {
       ...baseAttributes,

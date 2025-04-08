@@ -8,8 +8,8 @@
 //! Collectors configuration is cached and refreshed periodically.
 
 use anyhow::{Context, Result};
-use aws_sdk_secretsmanager::types::Filter;
 use aws_sdk_secretsmanager::Client as SecretsManagerClient;
+use aws_sdk_secretsmanager::types::Filter;
 use regex::Regex;
 use serde::{Deserialize, Deserializer};
 use std::env;
@@ -504,9 +504,11 @@ mod tests {
             exclude: None,
             disabled: false,
         };
-        assert!(collector
-            .construct_signal_endpoint("https://original.com/v1/traces")
-            .is_err());
+        assert!(
+            collector
+                .construct_signal_endpoint("https://original.com/v1/traces")
+                .is_err()
+        );
 
         let collector = Collector {
             name: "test".to_string(),

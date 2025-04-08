@@ -7,7 +7,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   eslint: true,
   gitignore: ["**/target"],
   minNodeVersion: "22.14.0",
-  name: "cdk-aws-lambda-otel-code-instrumentation",
+  name: "cdk-aws-otlp-forwarder-cwl-lambda",
   packageManager: javascript.NodePackageManager.PNPM,
   pnpmVersion: "10",
   prettier: true,

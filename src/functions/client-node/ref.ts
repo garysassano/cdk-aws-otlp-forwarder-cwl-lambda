@@ -1,17 +1,19 @@
-const {
+import {
   initTelemetry,
   createTracedHandler,
-} = require("@dev7a/lambda-otel-lite");
-const {
+  LambdaContext,
+} from "@dev7a/lambda-otel-lite";
+import {
   defaultExtractor,
   TriggerType,
-} = require("@dev7a/lambda-otel-lite/extractors");
-const { trace, SpanStatusCode } = require("@opentelemetry/api");
-const { registerInstrumentations } = require("@opentelemetry/instrumentation");
-const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
-const {
-  AwsInstrumentation,
-} = require("@opentelemetry/instrumentation-aws-sdk");
+} from "@dev7a/lambda-otel-lite/dist/internal/telemetry/extractors";
+import { trace, SpanStatusCode, Span } from "@opentelemetry/api";
+import { registerInstrumentations } from "@opentelemetry/instrumentation";
+import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
+import { AwsInstrumentation } from "@opentelemetry/instrumentation-aws-sdk";
+import axios from "axios";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { ScheduledEvent } from "aws-lambda";
 
 // Initialize telemetry with default configuration
 // The service name will be automatically set from OTEL_SERVICE_NAME
@@ -24,21 +26,26 @@ registerInstrumentations({
   instrumentations: [new AwsInstrumentation(), new HttpInstrumentation()],
 });
 
-const axios = require("axios");
-const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
 const QUOTES_URL = "https://dummyjson.com/quotes/random";
 const QUEUE_URL = process.env.QUOTES_QUEUE_URL;
 
+// Define the quote interface
+interface Quote {
+  id: number;
+  quote: string;
+  author: string;
+}
+
 // Helper function to get random quote from dummyjson
-async function getRandomQuote() {
-  return tracer.startActiveSpan("getRandomQuote", async (span) => {
+async function getRandomQuote(): Promise<Quote> {
+  return tracer.startActiveSpan("getRandomQuote", async (span: Span) => {
     try {
       const response = await axios.get(QUOTES_URL);
       return response.data;
     } catch (error) {
-      span.recordException(error);
+      span.recordException(error as Error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       throw error;
     } finally {
@@ -48,8 +55,8 @@ async function getRandomQuote() {
 }
 
 // Helper function to send quote to SQS
-async function sendQuote(quote) {
-  return tracer.startActiveSpan("sendQuote", async (span) => {
+async function sendQuote(quote: Quote): Promise<void> {
+  return tracer.startActiveSpan("sendQuote", async (span: Span) => {
     try {
       const command = new SendMessageCommand({
         QueueUrl: QUEUE_URL,
@@ -67,7 +74,7 @@ async function sendQuote(quote) {
       });
       await sqs.send(command);
     } catch (error) {
-      span.recordException(error);
+      span.recordException(error as Error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       throw error;
     } finally {
@@ -77,7 +84,10 @@ async function sendQuote(quote) {
 }
 
 // Process a single quote
-async function processQuote(quoteNumber, totalQuotes) {
+async function processQuote(
+  quoteNumber: number,
+  totalQuotes: number,
+): Promise<Quote> {
   const activeSpan = trace.getActiveSpan();
   const quote = await getRandomQuote();
 
@@ -100,8 +110,8 @@ async function processQuote(quoteNumber, totalQuotes) {
 }
 
 // Process a batch of quotes
-async function processBatch(batchSize) {
-  const quotes = [];
+async function processBatch(batchSize: number): Promise<Quote[]> {
+  const quotes: Quote[] = [];
 
   for (let i = 0; i < batchSize; i++) {
     const quote = await processQuote(i + 1, batchSize);
@@ -115,7 +125,7 @@ async function processBatch(batchSize) {
 const traced = createTracedHandler(
   "quote-generator",
   completionHandler,
-  (event, context) => {
+  (event: unknown, context: LambdaContext) => {
     const baseAttributes = defaultExtractor(event, context);
     return {
       ...baseAttributes,
@@ -129,38 +139,48 @@ const traced = createTracedHandler(
   },
 );
 
+interface LambdaResponse {
+  statusCode: number;
+  body: string;
+}
+
 // Lambda handler
-exports.handler = traced(async (event, context) => {
-  // Get current span to add custom attributes
-  const currentSpan = trace.getActiveSpan();
+export const handler = traced(
+  async (
+    event: ScheduledEvent,
+    context: LambdaContext,
+  ): Promise<LambdaResponse> => {
+    // Get current span to add custom attributes
+    const currentSpan = trace.getActiveSpan();
 
-  currentSpan?.addEvent("Lambda Invocation Started", {
-    "log.severity": "info",
-    "log.message": "Lambda function invocation started",
-  });
-
-  try {
-    const batchSize = Math.floor(Math.random() * 10) + 1;
-    currentSpan?.setAttribute("batch.size", batchSize);
-
-    const quotes = await processBatch(batchSize);
-
-    currentSpan?.addEvent("Batch Processing Completed", {
+    currentSpan?.addEvent("Lambda Invocation Started", {
       "log.severity": "info",
-      "log.message": `Successfully processed batch of ${batchSize} quotes`,
+      "log.message": "Lambda function invocation started",
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: `Retrieved and sent ${batchSize} random quotes to SQS`,
-        input: event,
-        quotes,
-      }),
-    };
-  } catch (error) {
-    currentSpan?.recordException(error);
-    currentSpan?.setStatus({ code: SpanStatusCode.ERROR });
-    throw error;
-  }
-});
+    try {
+      const batchSize = Math.floor(Math.random() * 10) + 1;
+      currentSpan?.setAttribute("batch.size", batchSize);
+
+      const quotes = await processBatch(batchSize);
+
+      currentSpan?.addEvent("Batch Processing Completed", {
+        "log.severity": "info",
+        "log.message": `Successfully processed batch of ${batchSize} quotes`,
+      });
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `Retrieved and sent ${batchSize} random quotes to SQS`,
+          input: event,
+          quotes,
+        }),
+      };
+    } catch (error) {
+      currentSpan?.recordException(error as Error);
+      currentSpan?.setStatus({ code: SpanStatusCode.ERROR });
+      throw error;
+    }
+  },
+);

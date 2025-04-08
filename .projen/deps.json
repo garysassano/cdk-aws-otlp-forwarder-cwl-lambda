@@ -111,6 +111,14 @@
       "type": "runtime"
     },
     {
+      "name": "@opentelemetry/instrumentation-aws-sdk",
+      "type": "runtime"
+    },
+    {
+      "name": "@opentelemetry/instrumentation-http",
+      "type": "runtime"
+    },
+    {
       "name": "@opentelemetry/instrumentation-undici",
       "type": "runtime"
     },

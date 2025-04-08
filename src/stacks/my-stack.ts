@@ -1,5 +1,3 @@
-import { Schedule, ScheduleExpression } from "@aws-cdk/aws-scheduler-alpha";
-import { LambdaInvoke } from "@aws-cdk/aws-scheduler-targets-alpha";
 import {
   CfnOutput,
   DockerImage,
@@ -31,6 +29,8 @@ import {
   SubscriptionFilter,
 } from "aws-cdk-lib/aws-logs";
 import { LambdaDestination } from "aws-cdk-lib/aws-logs-destinations";
+import { Schedule, ScheduleExpression } from "aws-cdk-lib/aws-scheduler";
+import { LambdaInvoke } from "aws-cdk-lib/aws-scheduler-targets";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { RustFunction } from "cargo-lambda-cdk";
 import { Construct } from "constructs";

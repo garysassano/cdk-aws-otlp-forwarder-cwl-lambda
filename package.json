@@ -44,8 +44,6 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-scheduler-alpha": "2.174.1-alpha.0",
-    "@aws-cdk/aws-scheduler-targets-alpha": "2.174.1-alpha.0",
     "@aws-sdk/client-sqs": "^3.782.0",
     "@dev7a/lambda-otel-lite": "^0.11.3",
     "@dev7a/otlp-stdout-exporter": "^0.3.1",

@@ -79,14 +79,6 @@
       "type": "build"
     },
     {
-      "name": "@aws-cdk/aws-scheduler-alpha",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-scheduler-targets-alpha",
-      "type": "runtime"
-    },
-    {
       "name": "@aws-sdk/client-sqs",
       "type": "runtime"
     },

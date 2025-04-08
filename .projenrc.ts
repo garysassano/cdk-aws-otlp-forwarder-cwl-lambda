@@ -14,8 +14,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   projenrcTs: true,
 
   deps: [
-    "@aws-cdk/aws-scheduler-alpha",
-    "@aws-cdk/aws-scheduler-targets-alpha",
     "@dev7a/otlp-stdout-exporter",
     "@dev7a/lambda-otel-lite",
     "@middy/core",

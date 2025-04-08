@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@aws-cdk/aws-scheduler-alpha':
-        specifier: 2.174.1-alpha.0
-        version: 2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
-      '@aws-cdk/aws-scheduler-targets-alpha':
-        specifier: 2.174.1-alpha.0
-        version: 2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(@aws-cdk/aws-kinesisfirehose-destinations-alpha@2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(@aws-cdk/aws-scheduler-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
       '@aws-sdk/client-sqs':
         specifier: ^3.782.0
         version: 3.782.0
@@ -147,40 +141,6 @@ packages:
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0':
     resolution: {integrity: sha512-7bY3J8GCVxLupn/kNmpPc5VJz8grx+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/MfPtTpf748UhR425A==}
-
-  '@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0':
-    resolution: {integrity: sha512-mYamgKEctwUkVkln45eymH/HDtF4ujYnaJ79lK/s/HPtoex6FvuFaAIbySChtg9mOq3H47syTqpTyjkYVdmm/g==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      aws-cdk-lib: ^2.174.1
-      constructs: ^10.0.0
-
-  '@aws-cdk/aws-kinesisfirehose-destinations-alpha@2.174.1-alpha.0':
-    resolution: {integrity: sha512-ApeuWxNA/oX6xmDTTexXewJ+kUXpR2mcvhfrdrUVOt3ZDx8OCHBAalmCzaPRlDSJazqO5pW2ldAYbGfjwj4sCg==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      '@aws-cdk/aws-kinesisfirehose-alpha': 2.174.1-alpha.0
-      aws-cdk-lib: ^2.174.1
-      constructs: ^10.0.0
-
-  '@aws-cdk/aws-scheduler-alpha@2.174.1-alpha.0':
-    resolution: {integrity: sha512-A+i1hVKiJXFRtip0XXASkoESHiFbXl1iA7gSkBeZ/udHe4EwSY9Pn7zj3hVUjOOOMuWL27qrk20DLYTGQuS5dg==}
-    engines: {node: '>= 14.15.0'}
-    deprecated: This package has been stabilized and moved to aws-cdk-lib
-    peerDependencies:
-      aws-cdk-lib: ^2.174.1
-      constructs: ^10.0.0
-
-  '@aws-cdk/aws-scheduler-targets-alpha@2.174.1-alpha.0':
-    resolution: {integrity: sha512-QeJzEcqj/DqqByr1peT0A3D/jKXaIXNFIsVdg7ykr4Bbmo6cEXfI5F/gAXWZ2lWFYvvysZil4zoM0YQrf5Tsxg==}
-    engines: {node: '>= 14.15.0'}
-    deprecated: This package has been stabilized and moved to aws-cdk-lib
-    peerDependencies:
-      '@aws-cdk/aws-kinesisfirehose-alpha': 2.174.1-alpha.0
-      '@aws-cdk/aws-kinesisfirehose-destinations-alpha': 2.174.1-alpha.0
-      '@aws-cdk/aws-scheduler-alpha': 2.174.1-alpha.0
-      aws-cdk-lib: ^2.174.1
-      constructs: ^10.0.0
 
   '@aws-cdk/cloud-assembly-schema@41.2.0':
     resolution: {integrity: sha512-JaulVS6z9y5+u4jNmoWbHZRs9uGOnmn/ktXygNWKNu1k6lF3ad4so3s18eRu15XCbUIomxN9WPYT6Ehh7hzONw==}
@@ -3199,30 +3159,6 @@ snapshots:
   '@aws-cdk/asset-awscli-v1@2.2.231': {}
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0': {}
-
-  '@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)':
-    dependencies:
-      aws-cdk-lib: 2.188.0(constructs@10.4.2)
-      constructs: 10.4.2
-
-  '@aws-cdk/aws-kinesisfirehose-destinations-alpha@2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)':
-    dependencies:
-      '@aws-cdk/aws-kinesisfirehose-alpha': 2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
-      aws-cdk-lib: 2.188.0(constructs@10.4.2)
-      constructs: 10.4.2
-
-  '@aws-cdk/aws-scheduler-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)':
-    dependencies:
-      aws-cdk-lib: 2.188.0(constructs@10.4.2)
-      constructs: 10.4.2
-
-  '@aws-cdk/aws-scheduler-targets-alpha@2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(@aws-cdk/aws-kinesisfirehose-destinations-alpha@2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(@aws-cdk/aws-scheduler-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)':
-    dependencies:
-      '@aws-cdk/aws-kinesisfirehose-alpha': 2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
-      '@aws-cdk/aws-kinesisfirehose-destinations-alpha': 2.174.1-alpha.0(@aws-cdk/aws-kinesisfirehose-alpha@2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2))(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
-      '@aws-cdk/aws-scheduler-alpha': 2.174.1-alpha.0(aws-cdk-lib@2.188.0(constructs@10.4.2))(constructs@10.4.2)
-      aws-cdk-lib: 2.188.0(constructs@10.4.2)
-      constructs: 10.4.2
 
   '@aws-cdk/cloud-assembly-schema@41.2.0': {}
 

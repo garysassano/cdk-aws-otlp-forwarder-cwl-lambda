@@ -227,7 +227,7 @@ export class MyStack extends Stack {
         LAMBDA_TRACING_ENABLE_FMT_LAYER: "false",
       },
     });
-    forwarderLambda.grantInvoke(new ServicePrincipal("logs.amazonaws.com"));
+    // Grant the forwarder lambda permission to access secrets
     forwarderLambda.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,

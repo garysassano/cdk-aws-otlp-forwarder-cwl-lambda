@@ -22,13 +22,7 @@ import {
   Tracing,
 } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import {
-  FilterPattern,
-  LogGroup,
-  RetentionDays,
-  SubscriptionFilter,
-} from "aws-cdk-lib/aws-logs";
-import { LambdaDestination } from "aws-cdk-lib/aws-logs-destinations";
+import { CfnAccountPolicy } from "aws-cdk-lib/aws-logs";
 import { Schedule, ScheduleExpression } from "aws-cdk-lib/aws-scheduler";
 import { LambdaInvoke } from "aws-cdk-lib/aws-scheduler-targets";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
@@ -250,38 +244,25 @@ export class MyStack extends Stack {
     // CLOUDWATCH LOGS
     //==============================================================================
 
-    // Define the lambdas and their configurations
-    const lambdaConfigs = [
-      { lambda: backendLambda, name: "Backend" },
-      { lambda: frontendLambda, name: "Frontend" },
-      { lambda: clientNodeLambda, name: "ClientNode" },
-      { lambda: clientPythonLambda, name: "ClientPython" },
-      { lambda: clientRustLambda, name: "ClientRust" },
-    ];
+    // Add account-level subscription filter permission to the forwarder lambda
+    forwarderLambda.addPermission("LogProcessorPermission", {
+      principal: new ServicePrincipal("logs.amazonaws.com"),
+      action: "lambda:InvokeFunction",
+      sourceArn: `arn:aws:logs:${this.region}:${this.account}:log-group:*`,
+      sourceAccount: this.account,
+    });
 
-    // Create forwarder subscription for each lambda
-    lambdaConfigs.forEach(({ lambda, name }) => {
-      const logGroup = new LogGroup(this, `${name}LambdaLogGroup`, {
-        logGroupName: `/aws/lambda/${lambda.functionName}`,
-        retention: RetentionDays.ONE_WEEK,
-        removalPolicy: RemovalPolicy.DESTROY,
-      });
-
-      new SubscriptionFilter(this, `${name}LambdaSubscription`, {
-        logGroup,
-        destination: new LambdaDestination(forwarderLambda),
-        filterPattern: FilterPattern.literal("{ $.__otel_otlp_stdout = * }"),
-      });
-
-      // Policy to avoid race condition
-      // (Lambda could recreate the log group if function is invoked while stack is being destroyed)
-      lambda.addToRolePolicy(
-        new PolicyStatement({
-          effect: Effect.DENY,
-          actions: ["logs:CreateLogGroup"],
-          resources: ["*"],
-        }),
-      );
+    // Create account-level subscription filter
+    new CfnAccountPolicy(this, "LogProcessorSubscriptionPolicy", {
+      policyName: "LogProcessorSubscriptionPolicy",
+      policyDocument: JSON.stringify({
+        DestinationArn: forwarderLambda.functionArn,
+        FilterPattern: "{ $.__otel_otlp_stdout = * }",
+        Distribution: "Random",
+      }),
+      policyType: "SUBSCRIPTION_FILTER_POLICY",
+      scope: "ALL",
+      selectionCriteria: `LogGroupName NOT IN ["/aws/lambda/${forwarderLambda.functionName}"]`,
     });
 
     //==============================================================================

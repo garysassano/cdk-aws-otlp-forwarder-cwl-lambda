@@ -269,7 +269,7 @@ export class MyStack extends Stack {
       },
     );
 
-    // Force dependency on the forwarder lambda
+    // Subscription policy cannot be created before adding the CloudWatch Logs permission
     forwarderLambdaSubscriptionPolicy.node.addDependency(forwarderLambda);
 
     //==============================================================================

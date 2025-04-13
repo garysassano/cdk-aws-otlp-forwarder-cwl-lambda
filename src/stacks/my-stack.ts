@@ -244,8 +244,8 @@ export class MyStack extends Stack {
     // CLOUDWATCH LOGS
     //==============================================================================
 
-    // Add account-level subscription filter permission to the forwarder lambda
-    forwarderLambda.addPermission("LogProcessorPermission", {
+    // Grant CloudWatch Logs permission to invoke the forwarder lambda
+    forwarderLambda.addPermission("ForwarderLambdaPermission", {
       principal: new ServicePrincipal("logs.amazonaws.com"),
       action: "lambda:InvokeFunction",
       sourceArn: `arn:aws:logs:${this.region}:${this.account}:log-group:*`,
@@ -253,17 +253,24 @@ export class MyStack extends Stack {
     });
 
     // Create account-level subscription filter
-    new CfnAccountPolicy(this, "LogProcessorSubscriptionPolicy", {
-      policyName: "LogProcessorSubscriptionPolicy",
-      policyDocument: JSON.stringify({
-        DestinationArn: forwarderLambda.functionArn,
-        FilterPattern: "{ $.__otel_otlp_stdout = * }",
-        Distribution: "Random",
-      }),
-      policyType: "SUBSCRIPTION_FILTER_POLICY",
-      scope: "ALL",
-      selectionCriteria: `LogGroupName NOT IN ["/aws/lambda/${forwarderLambda.functionName}"]`,
-    });
+    const forwarderLambdaSubscriptionPolicy = new CfnAccountPolicy(
+      this,
+      "ForwarderLambdaSubscriptionPolicy",
+      {
+        policyName: "ForwarderLambdaSubscriptionPolicy",
+        policyDocument: JSON.stringify({
+          DestinationArn: forwarderLambda.functionArn,
+          FilterPattern: "{ $.__otel_otlp_stdout = * }",
+          Distribution: "Random",
+        }),
+        policyType: "SUBSCRIPTION_FILTER_POLICY",
+        scope: "ALL",
+        selectionCriteria: `LogGroupName NOT IN ["/aws/lambda/${forwarderLambda.functionName}"]`,
+      },
+    );
+
+    // Force dependency on the forwarder lambda
+    forwarderLambdaSubscriptionPolicy.node.addDependency(forwarderLambda);
 
     //==============================================================================
     // OUTPUTS

@@ -63,7 +63,7 @@ async fn handler(event: LambdaEvent<ApiGatewayV2httpRequest>) -> Result<Value, E
             // Return a successful response
             Ok(serde_json::json!({
                 "statusCode": 200,
-                "body": format!("Hello from request {}", request_id),
+                "body": "Hello from Lambda!",
                 "headers": { "Content-Type": "text/plain" },
             }))
         }

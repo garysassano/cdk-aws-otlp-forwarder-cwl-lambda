@@ -245,7 +245,7 @@ export class MyStack extends Stack {
     //==============================================================================
 
     // Grant CloudWatch Logs permission to invoke the forwarder lambda
-    forwarderLambda.addPermission("ForwarderLambdaPermission", {
+    forwarderLambda.addPermission("ForwarderLambdaCwlPermission", {
       principal: new ServicePrincipal("logs.amazonaws.com"),
       action: "lambda:InvokeFunction",
       sourceArn: `arn:aws:logs:${this.region}:${this.account}:log-group:*`,
@@ -253,11 +253,11 @@ export class MyStack extends Stack {
     });
 
     // Create account-level subscription filter
-    const forwarderLambdaSubscriptionPolicy = new CfnAccountPolicy(
+    const forwarderLambdaAccountSubFilter = new CfnAccountPolicy(
       this,
-      "ForwarderLambdaSubscriptionPolicy",
+      "ForwarderLambdaAccountSubFilter",
       {
-        policyName: "ForwarderLambdaSubscriptionPolicy",
+        policyName: "ForwarderLambdaAccountSubFilter",
         policyDocument: JSON.stringify({
           DestinationArn: forwarderLambda.functionArn,
           FilterPattern: "{ $.__otel_otlp_stdout = * }",
@@ -269,8 +269,8 @@ export class MyStack extends Stack {
       },
     );
 
-    // Ensure the subscription policy is created after the CloudWatch Logs permission
-    forwarderLambdaSubscriptionPolicy.node.addDependency(forwarderLambda);
+    // Ensure the subscription filter is created after the CloudWatch Logs permission
+    forwarderLambdaAccountSubFilter.node.addDependency(forwarderLambda);
 
     //==============================================================================
     // OUTPUTS

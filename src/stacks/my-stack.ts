@@ -33,13 +33,13 @@ import { PythonFunction } from "uv-python-lambda";
 import { validateEnv } from "../utils/validate-env";
 
 // Constants
-const OTEL_EXPORTER_OTLP_PROTOCOL = "http/protobuf";
 const COLLECTORS_SECRETS_KEY_PREFIX = "serverless-otlp-forwarder/keys/";
 
 // Required environment variables
-const { OTEL_EXPORTER_OTLP_ENDPOINT, OTEL_EXPORTER_OTLP_HEADERS } = validateEnv(
-  ["OTEL_EXPORTER_OTLP_ENDPOINT", "OTEL_EXPORTER_OTLP_HEADERS"],
-);
+const env = validateEnv([
+  "OTEL_EXPORTER_OTLP_ENDPOINT",
+  "OTEL_EXPORTER_OTLP_HEADERS",
+]);
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -55,8 +55,8 @@ export class MyStack extends Stack {
       secretStringValue: SecretValue.unsafePlainText(
         JSON.stringify({
           name: "vendor",
-          endpoint: OTEL_EXPORTER_OTLP_ENDPOINT,
-          auth: OTEL_EXPORTER_OTLP_HEADERS,
+          endpoint: env.OTEL_EXPORTER_OTLP_ENDPOINT,
+          auth: env.OTEL_EXPORTER_OTLP_HEADERS,
         }),
       ),
     });
@@ -218,9 +218,9 @@ export class MyStack extends Stack {
       memorySize: 128,
       loggingFormat: LoggingFormat.JSON,
       environment: {
-        OTEL_EXPORTER_OTLP_ENDPOINT,
-        OTEL_EXPORTER_OTLP_HEADERS,
-        OTEL_EXPORTER_OTLP_PROTOCOL,
+        OTEL_EXPORTER_OTLP_ENDPOINT: env.OTEL_EXPORTER_OTLP_ENDPOINT,
+        OTEL_EXPORTER_OTLP_HEADERS: env.OTEL_EXPORTER_OTLP_HEADERS,
+        OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf",
         COLLECTORS_SECRETS_KEY_PREFIX,
         COLLECTORS_CACHE_TTL_SECONDS: "300",
         LAMBDA_EXTENSION_SPAN_PROCESSOR_MODE: "async",

@@ -175,7 +175,7 @@ export class MyStack extends Stack {
         image: DockerImage.fromBuild(
           join(__dirname, "../functions/client-python"),
         ),
-        assetExcludes: ["Dockerfile"],
+        assetExcludes: ["Dockerfile", ".venv"],
       },
     });
     new Schedule(this, "ClientPythonLambdaSchedule", {

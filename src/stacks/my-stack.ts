@@ -218,13 +218,13 @@ export class MyStack extends Stack {
       memorySize: 128,
       loggingFormat: LoggingFormat.JSON,
       environment: {
+        COLLECTORS_CACHE_TTL_SECONDS: "300",
+        COLLECTORS_SECRETS_KEY_PREFIX,
+        LAMBDA_EXTENSION_SPAN_PROCESSOR_MODE: "async",
+        LAMBDA_TRACING_ENABLE_FMT_LAYER: "false",
         OTEL_EXPORTER_OTLP_ENDPOINT: env.OTEL_EXPORTER_OTLP_ENDPOINT,
         OTEL_EXPORTER_OTLP_HEADERS: env.OTEL_EXPORTER_OTLP_HEADERS,
         OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf",
-        COLLECTORS_SECRETS_KEY_PREFIX,
-        COLLECTORS_CACHE_TTL_SECONDS: "300",
-        LAMBDA_EXTENSION_SPAN_PROCESSOR_MODE: "async",
-        LAMBDA_TRACING_ENABLE_FMT_LAYER: "false",
       },
     });
     // Grant the forwarder lambda permission to access secrets

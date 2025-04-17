@@ -76,7 +76,7 @@ def handler(event, context):
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "message": "Hello from demo Lambda!",
+                    "message": "Hello from Lambda!",
                     "input": event,
                     "quote": quote,
                     "response": response,

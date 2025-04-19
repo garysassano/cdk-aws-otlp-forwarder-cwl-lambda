@@ -4,7 +4,7 @@ CDK app showcasing a serverless approach to send OpenTelemetry traces to any OTe
 
 ### Related Apps
 
-- [cdk-aws-otlp-forwarder-kinesis-lambda] - Uses Kinesis Data Streams as the transport layer for traces instead of CloudWatch Logs.
+- [cdk-aws-otlp-forwarder-kinesis-lambda] - Uses Kinesis Data Streams as transport layer instead of CloudWatch Logs.
 
 ## Prerequisites
 

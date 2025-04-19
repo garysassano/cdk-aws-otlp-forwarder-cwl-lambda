@@ -1,6 +1,6 @@
 # cdk-aws-otlp-forwarder-cwl-lambda
 
-CDK app showcasing a serverless approach to send OpenTelemetry traces to any OTel-compatible vendor using AWS Lambda and CloudWatch Logs.
+CDK app showcasing a serverless approach to send OpenTelemetry traces to any OTel-compatible vendor using Lambda and CloudWatch Logs.
 
 ### Related Apps
 

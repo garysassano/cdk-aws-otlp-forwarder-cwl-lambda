@@ -5,7 +5,6 @@ CDK app showcasing a serverless approach to send OpenTelemetry traces to any OTe
 ### Related Apps
 
 - [cdk-aws-otlp-forwarder-kinesis-lambda] - WIP
-- [serverless-otlp-forwarder](https://github.com/dev7a/serverless-otlp-forwarder) - Built with AWS SAM instead of CDK; this is what the app is based on.
 
 ## Prerequisites
 
